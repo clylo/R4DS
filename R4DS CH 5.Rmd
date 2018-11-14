@@ -1,0 +1,135 @@
+---
+title: "R4DS CH5"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+install.packages('nycflights13')
+```
+
+
+1.
+```{r}
+library(nycflights13)
+flights
+filter(flights, month == 1,day == 2)
+```
+
+Had an arrival delay of two or more hours
+```{r}
+filter(flights,arr_delay > 2)
+```
+
+Flew to Houston (IAH or HOU)
+```{r}
+filter(flights,dest == "IAH" | dest == "HOU")
+```
+
+Were operated by United, American, or Delta
+```{r}
+unique(flights["carrier"])
+```
+```{r}
+filter(flights, carrier == "DL"| carrier == "UA"| carrier == "AA")
+```
+
+Departed in summer (July, August, and September)
+```{r}
+filter(flights,month >= 7 ,month <=9)
+```
+Arrived more than two hours late, but didn't leave late
+```{r}
+filter(flights, arr_delay > 2, dep_delay <= 0)
+```
+
+Were delayed by at least an hour, but made up over 30 minutes in flight
+```{r}
+filter(flights, dep_delay >= 1, dep_delay - arr_delay > 30)
+```
+
+Departed between midnight and 6am (inclusive)
+```{r}
+filter(flights, sched_dep_time <= 600 | sched_dep_time == 2400 )
+```
+
+2.
+between() returns if values fall between a range
+```{r}
+filter(flights, between(sched_dep_time, 0, 600))
+```
+
+3.
+```{r}
+filter(flights,is.na(dep_time))
+```
+Probably cancellations
+
+4.
+anything to power 0 equals one so not NA
+```{r}
+NA^0
+```
+
+5.3.1
+1.
+```{r}
+arrange(flights, desc(is.na(dep_time)),dep_time)
+```
+
+2.
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+3.
+```{r}
+arrange(flights,air_time)
+arrange(flights,desc(air_time))
+```
+
+5.4.1
+1.
+```{r}
+select(flights, dep_time, dep_delay, arr_time, arr_delay)
+
+
+```
+
+```{r}
+select(flights,dep_time:arr_time, arr_delay)
+```
+
+```{r}
+select(flights, contains("delay"), contains("time"))
+```
+
+2.
+```{r}
+select(flights, arr_time, arr_time)
+```
+
+nothing
+
+3.
+```{r}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+select(flights,one_of(vars))
+```
+
+one_of matches variable names to those stored in a vector, nice!
+
+4.
+```{r}
+select(flights,contains("TIME", ignore.case = FALSE))
+```
+
+yes b/c its not case sensitive just like sql lol
+
+5.5.2
+1.
+```{r}
+View(flights)
+#mutate(flights,  = dep_time)
+```
+

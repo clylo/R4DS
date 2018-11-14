@@ -1,0 +1,28 @@
+---
+title: "R4Ds Ch 4"
+output: html_notebook
+---
+
+
+4.4
+```{r}
+my_variable <- 10
+my_variable
+#> Error in eval(expr, envir, enclos): object 'my_variable' not found
+```
+Theres no dot on the i LOL
+
+2.
+```{r}
+library(tidyverse)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+filter(mpg, cyl == 8)
+
+filter(diamonds, carat > 3)
+```
+
+3.
+bring up all shortcuts

@@ -1,0 +1,87 @@
+---
+title: "R4DS"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+mpg
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+3.3.1
+1.
+Not blue because colour is inside aes
+2.
+categorical: manufacturer etc.
+continuous: year, displ, hwy etc.
+3.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = year))
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = manufacturer))
+```
+
+continuous var are same colour different shade, vs categoricals which are diff colour
+4.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class,shape = class))
+```
+Doesn't work too well. lol
+5.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy,  stroke = 5))
+```
+
+Doesnt work with all shapes
+6.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(colour = displ < 5))
+```
+Throws error
+
+3.5.1 Ex
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+```
+
+1.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ hwy, nrow = 2)
+```
+It looks awful and unhelpful.
+
+2.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = drv, y = cyl))
+```
+
+3.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+```
+Plot hwy by displ for each drv and cyl category
+The . removes faceting either col or rows depending on which side of the ~
+4. 
