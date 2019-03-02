@@ -1,0 +1,110 @@
+---
+title: "C14 Strings"
+output: html_notebook
+---
+
+
+```{r}
+library(stringr)
+library(tidyverse)
+```
+14.2.5
+In code that doesn’t use stringr, you’ll often see paste() and paste0(). What’s the difference between the two functions? What stringr function are they equivalent to? How do the functions differ in their handling of NA?
+
+paste fn has default separator of space, wheres with paste0 you can specify what type of sep u want
+
+```{r}
+??str_c
+```
+
+In your own words, describe the difference between the sep and collapse arguments to str_c().
+
+diff between sep and collapse args to str_c is that sep is the separator type like in paste0 which can be specified, collapse takes a sep and uses it to concat multiple vectors
+
+Use str_length() and str_sub() to extract the middle character from a string. What will you do if the string has an even number of characters?
+
+```{r}
+cat <- 'cat'
+
+str_sub(cat, 2, 2)
+str_length(cat)
+
+```
+
+What does str_wrap() do? When might you want to use it?
+```{r}
+?str_wrap()
+```
+take a string and format it into a paragraph, with a set char width
+
+What does str_trim() do? What’s the opposite of str_trim()?
+
+```{r}
+?str_trim
+```
+removes the whitespaces from strings
+
+the opposite of str_trim is str_pad which will pad a space
+
+Write a function that turns (e.g.) a vector c("a", "b", "c") into the string a, b, and c. Think carefully about what it should do if given a vector of length 0, 1, or 2.
+
+```{r}
+vec <- c("a","b","c")
+vec
+length(vec)
+
+```
+
+14.3 RegExp
+str matching
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, "an")
+```
+
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, ".a.")
+
+```
+```{r}
+x <- c("ap\\ple", "bana\\na", "p\\ear")
+str_view(x, "\\\\")
+```
+
+Because the \ will escape the next char in string
+\\ will make a literal
+\\\ will make a literal and skip the next char
+\\\\ will match a single literal
+
+```{r}
+x <- "\\"'\\\"\
+
+```
+
+```{r}
+str_view("\"'\\", "\"'\\\\", match = TRUE)
+```
+
+```{r}
+str_view("a.b.c","\\..\\..\\..")
+```
+
+Anchors
+14.3.2
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, "^a")
+str_view(x,"a$")
+```
+
+```{r}
+str_view("$^$", "^\\$\\^\\$", match = TRUE)
+```
+```{r}
+
+```
+
+
+
+
