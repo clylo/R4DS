@@ -1,0 +1,164 @@
+---
+title: "Ch12 Tidy Data"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+library(tidyverse)
+table1
+```
+
+the three golden rules of tidy data
+each variable is its own column
+each observation is its own row
+each value is its own cell
+
+1. guessing t1 is the tidy data, 
+2.Compute the rate for table2, and table4a + table4b. You will need to perform four operations:
+
+Extract the number of TB cases per country per year.
+Extract the matching population per country per year.
+Divide cases by population, and multiply by 10000.
+Store back in the appropriate place.
+Which representation is easiest to work with? Which is hardest? Why?
+```{r}
+table2
+
+t2_cases <- filter(table2, type == "cases") %>%
+  rename(cases = count) %>%
+  arrange(country, year)
+t2_cases
+
+t2_population <- filter(table2, type == "population")%>%
+  rename(population = count) %>%
+  arrange(country, year)
+
+t2_cases_per_cap <- t2_cases %>%
+  mutate(population = t2_population$population,
+         cases_per_cap = (cases / population) * 10000) %>%
+  select(country, year, cases_per_cap)
+t2_cases_per_cap
+
+t2_cases_per_cap <- t2_cases_per_cap %>%
+  mutate(type = "cases_per_cap") %>%
+  rename(count = cases_per_cap)
+
+bind_rows(table2, t2_cases_per_cap) %>%
+  arrange(country, year, type, count)
+
+```
+```{r}
+#table4a is count of tb cases
+#table4b is pop
+table4c <- tibble(country = table4a$country,
+                  `1999` = table4a[['1999']]*10^4/table4b[['1999']],
+                  `2000` = table4a[['2000']]*10^4/table4b[['2000']]
+                  )
+table4c
+```
+
+3.
+```{r}
+table2 %>% 
+  filter(type == 'cases') %>% 
+  ggplot(aes(year, count))+
+  geom_line(aes(group = country), color = 'grey50')+
+  geom_point(aes(color = country))
+
+```
+
+12.3.3
+1.
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2016, 2016),
+  half  = c(   1,    2,     1,    2),
+  return = c(1.88, 0.59, 0.92, 0.17)
+)
+stocks
+
+stocks %>% 
+  spread(year, return) %>% 
+  gather("year", "return", `2015`:`2016`)
+```
+year turned into a character after being spread and gathered, guessing this is because of coercion info is lost 
+
+using convert can keep the column info
+
+2.
+
+```{r}
+table4a
+table4a %>% 
+  gather(-country, key = "year", value = "cases")
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+```
+
+Fails to gather because the country var col is still there
+
+3.
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+```
+fails to spread properly because phil woods has two ages and two vals for each age
+
+12.4.3
+1.
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"), fill = 'left', extra = 'drop')
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"), fill = 'right')
+```
+
+2.
+If TRUE, remove input column from output data frame.
+
+set it to false if you want to keep the original vector
+
+3.
+different types of delimiters but only one method of concatenation 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,91 @@
+---
+title: "Ch11 Data Import"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+library(tidyverse)
+```
+
+11.2.2
+1. Use read_delim
+2. other than file,skip,comment they have col names, types and na etc.. in common
+3. most important is the col positions
+4.
+```{r}
+read_csv("x,y\n1,'a,b'",quote = "")
+```
+5.
+```{r}
+read_csv("a,b\n1,2,3\n4,5,6")
+#new line not being added
+
+read_csv("a,b,c\n1,2\n1,2,3,4")
+# na in the c col
+
+read_csv("a,b\n\"1")
+#na in b col
+
+read_csv("a,b\n1,2\na,b")
+#didnt capture the na
+
+read_csv("a;b\n1;3")
+#supposed to have 2 col a and b delim via semicolon
+
+```
+
+11.3.5
+1.
+date names, time formats
+```{r}
+locale()
+```
+2.
+```{r}
+# Used in many parts of Europe
+parse_number("123.456.789", locale = locale(decimal_mark = ","))
+#> [1] 1.23e+08
+```
+
+If set to the same, will t hrow an error.
+Default of the grouping_mark will be "." and vice versa
+
+3.
+```{r}
+parse_date("1 janvier 2015", "%d %B %Y", locale = locale("fr",time_format = ,date_format = ))
+```
+6. eu - iso-8859-1, asia has too many
+5. one uses comma another semi colon for delimiter 
+7.
+```{r}
+d1 <- "January 1, 2010"
+parse_date(d1, "%B %d, %Y")
+d2 <- "2015-Mar-07"
+parse_date(d2, "%Y-%b-%d")
+d3 <- "06-Jun-2017"
+parse_date(d3, "%d-%b-%Y")
+d4 <- c("August 19 (2015)", "July 1 (2015)")
+parse_date(d4, "%B %d (%Y)")
+d5 <- "12/30/14" # Dec 30, 2014
+parse_date(d5, "%m/%d/%y")
+t1 <- "1705"
+parse_time(t1, "%H%M")
+t2 <- "11:15:10.12 PM"
+parse_time(t2, "%H:%M:%OS %p")
+```
+
+11.4
