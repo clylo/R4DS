@@ -1,0 +1,141 @@
+---
+title: "Functions"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+What's the difference between if and ifelse()? Carefully read the help and construct three examples that illustrate the key differences.
+
+```{r}
+if (1 == 2) {
+  print('hello')
+}
+```
+```{r}
+ifelse(1==2, 'hello', 'hi')
+```
+ifelse requires false value, if does not, to use if + else syntax for simple 2 option true or false
+
+```{r}
+if(identical(1,1)){
+  print('hullo')
+} else {
+  print('hii')
+}
+```
+
+Write a greeting function that says "good morning", "good afternoon", or "good evening", depending on the time of day. (Hint: use a time argument that defaults to lubridate::now(). That will make it easier to test your function.)
+```{r}
+library(lubridate)
+greeting <- function(hr = now()){
+  print(time)
+  if (hr < 12){
+    print('hellomorning')
+  } else if ( hr < 18) {
+    print('goodafternoon')
+  } else {
+    print('goodevening')
+  }
+}
+```
+
+```{r}
+hour(greeting())
+```
+
+Implement a fizzbuzz function. It takes a single number as input. If the number is divisible by three, it returns "fizz". If it's divisible by five it returns "buzz". If it's divisible by three and five, it returns "fizzbuzz". Otherwise, it returns the number. Make sure you first write working code before you create the function.
+
+```{r}
+fizzbuzz <- function(number){
+  if (number %% 3 == 0 && number %% 5 == 0){
+    print("fizzbuzz")
+  } else if (number %% 5 == 0){
+    print("buzz")
+  } else if (number %% 3 == 0)
+    print("fizz")
+}
+```
+```{r}
+fizzbuzz(9)
+```
+
+
+How could you use cut() to simplify this set of nested if-else statements?
+
+if (temp <= 0) {
+  "freezing"
+} else if (temp <= 10) {
+  "cold"
+} else if (temp <= 20) {
+  "cool"
+} else if (temp <= 30) {
+  "warm"
+} else {
+  "hot"
+}
+```{r}
+temp <- seq(-10, 30, by = 5)
+cut(temp,c(-Inf,0,10,20,30,Inf), right = FALSE, labels = c("freezing", "cold", "cool", "warm", "hot"))
+```
+
+How would you change the call to cut() if I'd used < instead of <=? What is the other chief advantage of cut() for this problem? (Hint: what happens if you have many values in temp?)
+Cut allows you to enter a vector, basically a scale
+
+What happens if you use switch() with numeric values? 
+will return the 1st 2nd 3rd value
+```{r}
+switch (1,
+  'a', 'b' , 'c'
+)
+```
+
+What does this switch() call do? What happens if x is "e"?
+
+```{r}
+switch('b', 
+  a = ,
+  b = "ab",
+  c = ,
+  d = "cd"
+)
+```
+returns a value if parameter is the same else next one down
+e is not an option the cases, so it wont return anything
+
+19.5.5 Exercises
+What does commas(letters, collapse = "-") do? Why?
+```{r}
+
+```
+
+It'd be nice if you could supply multiple characters to the pad argument, e.g. rule("Title", pad = "-+"). Why doesn't this currently work? How could you fix it?
+```{r}
+
+```
+
+
+What does the trim argument to mean() do? When might you use it?
+```{r}
+mean(c(10.5,10,10.5), trim = .5)
+```
+Cut off the ends of a vector to calc means
+
+The default value for the method argument to cor() is c("pearson", "kendall", "spearman"). What does that mean? What value is used by default?
+```{r}
+cor()
+```
+
+Use pearson as default, else others are options.
+
+
+
+
+
+

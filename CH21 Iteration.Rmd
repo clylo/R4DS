@@ -1,0 +1,328 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Iteration methods
+1.imperative
+2.functional
+
+```{r}
+library(tidyverse)
+```
+
+simple loop example
+```{r}
+df <- tibble(a = rnorm(10),
+       b = rnorm(10),
+       c = rnorm(10),
+       d = rnorm(10))
+
+```
+
+```{r}
+output <- vector("double", ncol(df))  # 1. output, make empty 'space' for the output to fill later
+for (i in seq_along(df)) {            # 2. sequence, iterate along this vector ...
+  output[[i]] <- median(df[[i]])      # 3. body, stick the output in the empty data structure we created using func 
+}
+output # read out
+```
+
+21.2.1 Exercises
+Write for loops to:
+
+Compute the mean of every column in mtcars.
+```{r}
+mtcars
+```
+```{r}
+mtcarsMean <- vector("double", length = ncol(mtcars))
+for (i in seq_along(mtcars)) {
+  mtcarsMean[[i]] <- mean(mtcars[[i]])
+}
+mtcarsMean
+```
+
+Determine the type of each column in nycflights13::flights.
+```{r}
+library('nycflights13')
+
+nycfcolType <- vector("character", length= ncol(nycflights13::flights))
+for (i in names(nycflights13::flights)) {
+  nycfcolType[[i]] <- typeof(nycflights13::flights[[i]])
+}
+
+nycfcolType
+```
+
+Compute the number of unique values in each column of iris.
+```{r}
+install.packages("iris")
+library("iris")
+```
+```{r}
+iris
+```
+```{r}
+uniq_iris <- vector("double", ncol(iris))
+for (i in seq_along(iris)) {
+  uniq_iris[i] <- length(unique(iris[[i]]))
+}
+
+uniq_iris
+```
+
+Generate 10 random normals for each of  
+??
+=
+???
+10
+ ,  
+0
+ ,  
+10
+ , and  
+100
+ .
+Think about the output, sequence, and body before you start writing the loop.
+
+```{r}
+mew <- c(-10,0,10,100)
+
+norms <- vector("list", length(mew))
+for (i in seq_along(norms)) {
+  norms[[i]] <- rnorm(10, mean = mew[i])
+}
+
+norms
+```
+
+Eliminate the for loop in each of the following examples by taking advantage of an existing function that works with vectors:
+
+out <- ""
+for (x in letters) {
+  out <- stringr::str_c(out, x)
+}
+```{r}
+letters
+
+str_c(letters, sep = " ", collapse = "")
+```
+
+x <- sample(100)
+sd <- 0
+for (i in seq_along(x)) {
+  sd <- sd + (x[i] - mean(x)) ^ 2
+}
+sd <- sqrt(sd / (length(x) - 1))
+```{r}
+sd(rnorm(100))
+```
+
+x <- runif(100)
+out <- vector("numeric", length(x))
+out[1] <- x[1]
+for (i in 2:length(x)) {
+  out[i] <- out[i - 1] + x[i]
+}
+
+Combine your function writing and for loop skills:
+
+Write a for loop that prints() the lyrics to the children's song "Alice the camel".
+
+Convert the nursery rhyme "ten in the bed" to a function. Generalise it to any number of people in any sleeping structure.
+
+Convert the song "99 bottles of beer on the wall" to a function. Generalise to any number of any vessel containing any liquid on any surface.
+
+It's common to see for loops that don't preallocate the output and instead increase the length of a vector at each step:
+
+```{r}
+x <- c(10,2,4,1)
+output <- vector("integer", 0)
+for (i in seq_along(x)) {
+  output <- c(output, lengths(x[[i]]))
+}
+output
+```
+
+How does this affect performance? Design and execute an experiment
+
+makes it slower.
+
+##################################
+
+There are four variations on the basic theme of the for loop:
+
+Modifying an existing object, instead of creating a new object.
+Looping over names or values, instead of indices.
+Handling outputs of unknown length.
+Handling sequences of unknown length.
+
+####################################
+
+There are three basic ways to loop over a vector. So far I've shown you the most general: looping over the numeric indices with for (i in seq_along(xs)), and extracting the value with x[[i]]. There are two other forms:
+
+Loop over the elements: for (x in xs). This is most useful if you only care about side-effects, like plotting or saving a file, because it's difficult to save the output efficiently.
+
+Loop over the names: for (nm in names(xs)). This gives you name, which you can use to access the value with x[[nm]]. This is useful if you want to use the name in a plot title or a file name. If you're creating named output, make sure to name the results vector like so:
+
+results <- vector("list", length(x))
+names(results) <- names(x)
+
+Iteration over the numeric indices is the most general form, because given the position you can extract both the name and the value:
+
+for (i in seq_along(x)) {
+  name <- names(x)[[i]]
+  value <- x[[i]]
+}
+
+###################################
+
+Imagine you have a directory full of CSV files that you want to read in. You have their paths in a vector, files <- dir("data/", pattern = "\\.csv$", full.names = TRUE), and now want to read each one with read_csv(). Write the for loop that will load them into a single data frame.
+```{r}
+dfcsv <- vector("character", length(files))
+for (i in files) {
+  dfcsv[[i]] <- read_csv(files[[i]])
+}
+
+dfcsv <- bind_rows(dfcsv)
+```
+
+What happens if you use for (nm in names(x)) and x has no names? What if only some of the elements are named? What if the names are not unique?
+```{r}
+x <- c(1:10)
+for (nm in names(x)) {
+  print(nm)  
+}
+y <- c(a = 1, a = 2, b = 3, 6)
+for (nm in names(y)) {
+  print(nm)  
+}
+```
+wont do anything, will print out duplicates
+
+Write a function that prints the mean of each numeric column in a data frame, along with its name. For example, show_mean(iris) would print:
+
+show_mean(iris)
+```{r}
+show_mean <- function(x) {
+  meanvector <- vector("double",length = ncol(x))
+  for (i in seq_along(x)) {
+    meanvector[[i]] <- mean(x[[i]])
+  }
+}
+
+show_mean(iris)
+
+```
+
+```{r}
+show_mean <- function(df, digits = 2) {
+  # Get max length of all variable names in the dataset
+  maxstr <- max(str_length(names(df)))
+  for (nm in names(df)) {
+    if (is.numeric(df[[nm]])) {
+      cat(
+        str_c(str_pad(str_c(nm, ":"), maxstr + 1L, side = "right"),
+          format(mean(df[[nm]]), digits = digits, nsmall = digits),
+          sep = " "
+        ),
+        "\n"
+      )
+    }
+  }
+}
+show_mean(iris)
+```
+
+(Extra challenge: what function did I use to make sure that the numbers lined up nicely, even though the variable names had different lengths?)
+
+What does this code do? How does it work?
+```{r}
+trans <- list( 
+  disp = function(x) x * 0.0163871,
+  am = function(x) {
+    factor(x, labels = c("auto", "manual"))
+  }
+)
+for (var in names(trans)) {
+  mtcars[[var]] <- trans[[var]](mtcars[[var]])
+}
+
+trans
+```
+take disp column and multiply it by .01638
+
+```{r}
+a <- tibble(a = rnorm(10), b = rnorm(10))
+a
+```
+```{r}
+apply(a, 2, sum)
+```
+
+map functions (+purrr)
+design pattern: loop over a vector, doing something to each element and save the result to memory
+```{r}
+map_dbl(a, mean)
+```
+
+```{r}
+library(purrr)
+```
+
+
+```{r}
+models <- mtcars %>% 
+  split(.$cyl) %>% 
+  map(~lm(mpg ~ wt, data = .))
+models
+
+```
+Write code that uses one of the map functions to:
+
+Compute the mean of every column in mtcars.
+```{r}
+map_dbl(mtcars, mean)
+```
+
+Determine the type of each column in nycflights13::flights.
+```{r}
+map_chr(nycflights13::flights,typeof)
+```
+
+Compute the number of unique values in each column of iris.
+```{r}
+map_dbl(iris, function(x) length(unique(x)))
+```
+
+Generate 10 random normals for each of  
+??
+=
+???
+10
+ ,  
+0
+ ,  
+10
+ , and  
+100
+ .
+```{r}
+map_dbl(c(-10,0,10,100), ~ rnorm(n = 10, ))
+```
+
+
+How can you create a single vector that for each column in a data frame indicates whether or not it's a factor?
+
+What happens when you use the map functions on vectors that aren't lists? What does map(1:5, runif) do? Why?
+
+What does map(-2:2, rnorm, n = 5) do? Why? What does map_dbl(-2:2, rnorm, n = 5) do? Why?
+
+Rewrite map(x, function(df) lm(mpg ~ wt, data = df)) to eliminate the anonymous function.
+
+
+```{r}
+
+```
+

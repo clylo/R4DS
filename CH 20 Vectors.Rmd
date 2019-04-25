@@ -1,0 +1,185 @@
+---
+title: "CH20 Vectors"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+!is.infinite(Inf)
+```
+Is it infinite, return boolean and ! makes it the opposite, is it not infinite?
+
+```{r}
+library(dplyr)
+```
+```{r}
+near(5+5,10)
+```
+See if two numeric vectors are equal
+
+```{r}
+near
+```
+Brainstorm at least four functions that allow you to convert a double to an integer. How do they differ? Be precise.
+
+```{r}
+as.integer(10.11111)
+```
+
+What functions from the readr package allow you to turn a string into logical, integer, and double vector?
+parse_logical
+parse_integer
+parse_number
+
+```{r}
+
+```
+
+20.4.6 Exercises
+What does mean(is.na(x)) tell you about a vector x? What about sum(!is.finite(x))?
+```{r}
+mean(is.na(c(10,10,10,NA)))
+```
+The number 1 out of 4 in the vector is NA
+```{r}
+sum(!is.infinite(c(10,10,10,NA)))
+```
+4 elements in the vector is not Inf
+
+Carefully read the documentation of is.vector(). What does it actually test for? Why does is.atomic() not agree with the definition of atomic vectors above?
+```{r}
+
+```
+
+Compare and contrast setNames() with purrr::set_names().
+```{r}
+setNames(c(10,10,10,10), nm = c("a","b","c","d"))
+```
+
+Create functions that take a vector as input and returns:
+
+The last value. Should you use [ or [[?
+```{r}
+last <- function(x){
+  x[length(x)]
+}
+```
+```{r}
+last(c(1,2,3))
+```
+
+The elements at even numbered positions.
+```{r}
+even <- function(x){
+  x[seq_along(x) %% 2 == 0)]
+}
+```
+```{r}
+even(c(3,3,3,4,5))
+```
+
+Every element except the last value.
+```{r}
+notlast <- function(x){
+  x[-length(x)]
+}
+```
+```{r}
+notlast(c(1,2,3,4))
+```
+
+Only even numbers (and no missing values).
+```{r}
+evenposition <- function(x){
+  x[rep(x %%2 ==0)]
+}
+```
+```{r}
+evenposition(c(2,4,5,3,8,10))
+```
+
+Why is x[-which(x > 0)] not the same as x[x <= 0]?
+```{r}
+z <- c(2,-3,0,-5,5)
+z[z <= 0]
+
+z[-which(z > 0)]
+```
+first one says index z where z is less equal to zero
+
+second says index those which z are less than 0
+
+What happens when you subset with a positive integer that's bigger than the length of the vector? What happens when you subset with a name that doesn't exist?
+
+```{r}
+y <- c(1,10)
+#length of vector is two
+
+#subset with position 3
+y[3]
+```
+brings up an NA,
+
+
+Draw the following lists as nested sets:
+
+list(a, b, list(c, d), list(e, f))
+list(list(list(list(list(list(a))))))
+
+What happens if you subset a tibble as if you're subsetting a list? What are the key differences between a list and a tibble?
+```{r}
+tibble::tibble(x = 1:5, y = x ^ 2)
+```
+```{r}
+randlist <- list(1,list(1,2,3),list(list(123,123)))
+randlist
+```
+
+```{r}
+
+```
+subetting tibbles is the same as a list and a tibble can even be thought as like columns of lists which all have the same length.
+
+20.7.4 Exercises
+What does hms::hms(3600) return? How does it print? What primitive type is the augmented vector built on top of? What attributes does it use?
+```{r}
+hms::hms(3600)
+typeof(hms::hms(3600))
+print(hms::hms(3600))
+```
+Is a double type. The primitive type built on top of it is
+
+Try and make a tibble that has columns with different lengths. What happens?
+```{r}
+tibble::tibble(x=list(1,2,3), y=list(1,2))
+```
+cant make it cuz the lengths are different
+
+Based on the definition above, is it ok to have a list as a column of a tibble?
+Yes but it has to be the same lengths really
+
+
+
+
+
+
+
+
+
+
+
+
+
